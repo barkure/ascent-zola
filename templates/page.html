@@ -1,0 +1,7 @@
+{#- A single page: article plus the newer/older navigation, like `page.ejs`. -#}
+{% extends "base.html" %}
+{% block content %}
+{% set post = page %}
+{% set index = false %}
+{% include "partials/article.html" %}
+{% endblock content %}

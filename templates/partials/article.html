@@ -1,0 +1,82 @@
+{#- One post, as it appears on the home/tag/category listings or on its own page.
+    Context: `post`, `index`, plus the theme's date options. -#}
+{% set layout = post.extra.layout | default(value="post") %}
+<article id="{{ layout }}-{{ post.slug }}" class="article article-type-{{ layout }}" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    {% if post.title %}
+      <header class="article-header">
+        {{ <post_title post={post} class_name="article-title" index={index} show_words={false} /> }}
+        <div class="article-meta">
+          {{ <post_date d={post.date} class_name="article-date" day={false} locale={config.extra.date_locale} cjk={config.extra.cjk_meridiem} /> }}
+          {% if config.extra.word_count %}
+            × <span class="article-word-count">{{ post.word_count }} words</span>
+            {% if post.reading_time == 1 %}
+            × <span class="article-time-to-read">{{ post.reading_time }} minute</span>
+            {% else %}
+            × <span class="article-time-to-read">{{ post.reading_time }} minutes</span>
+            {% endif %}
+          {% endif %}
+        </div>
+      </header>
+    {% endif %}
+    <div class="article-entry" itemprop="articleBody">
+      {% if post.extra.photos | default(value=false) %}
+      <div class="article-gallery">
+        <div class="article-gallery-photos">
+          {% for photo in post.extra.photos %}
+            <a class="article-gallery-img" data-fancybox="gallery" href="{{ photo | safe }}" rel="gallery_{{ post.slug }}">
+              <img src="{{ photo | safe }}" itemprop="image">
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if index and post.summary %}
+        {{ <excerpt post={post} /> }}
+      {% else %}
+        {{ post.content | safe }}
+      {% endif %}
+    </div>
+    {% if index and post.summary and config.extra.excerpt_link %}
+      <div class="article-more-link">
+        <a href="{{ post.permalink }}#continue-reading">{{ config.extra.excerpt_link }}</a>
+      </div>
+    {% endif %}
+    {% if not index %}
+    {% set tags = post.taxonomies.tags | default(value=[]) %}
+    {% set cats = post.taxonomies.categories | default(value=[]) %}
+    {% if tags or cats %}
+    <div class="article-category">
+      {% if cats %}
+        <b>Categories:</b>
+        {% for c in cats %}<a class="article-category" href="{{ get_taxonomy_url(kind='categories', term=c) }}">{{ c }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+      {% endif %}
+      {% if cats and tags %}
+        <br/>
+      {% endif %}
+      {% if tags %}
+        <b>Tags:</b>
+        {% for t in tags %}<a class="article-tag" href="{{ get_taxonomy_url(kind='tags', term=t) }}">{{ t }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+      {% endif %}
+    </div>
+    {% endif %}
+    {% endif %}
+    {% if index and config.extra.intensedebate_acct %}
+      <footer class="article-footer">
+        <a href="{{ post.permalink }}#idc-container">Comments</a>
+      </footer>
+    {% endif %}
+  </div>
+</article>
+{% if not index %}
+{% include "partials/post_nav.html" %}
+{% endif %}
+{% if not index and config.extra.intensedebate_acct %}
+  <script>
+  var idcomments_acct = '{{ config.extra.intensedebate_acct }}';
+  var idcomments_post_id;
+  var idcomments_post_url;
+  </script>
+  <span id="IDCommentsPostTitle" style="display:none"></span>
+  <script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
+{% endif %}

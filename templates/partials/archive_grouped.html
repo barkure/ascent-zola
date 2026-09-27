@@ -1,0 +1,24 @@
+{#- Month-grouped archive with the theme's "Toggle all" checkbox UI, exactly
+    like `_partial/archive.ejs` did when pagination was disabled.
+    Context: `posts`, sorted newest first. -#}
+<section class="archives-wrap" style="margin-bottom: 0.5em;">
+  <input class="hidden-input" type="checkbox" onClick="tgl(this)" id="toggle-all">
+  <label class="month" for="toggle-all">Toggle all</label>
+</section>
+{% set_global last = "" %}
+{% set_global n = 0 %}
+{% for post in posts %}
+  {% set key = post.date | date(format="%Y-%m") %}
+  {% if key != last %}
+    {% if last != "" %}</div></section>{% endif %}
+    {% set_global n = n + 1 %}
+    {% set_global last = key %}
+      <section class="archives-wrap">
+        <input class="hidden-input" type="checkbox" name="expand" id="expand{{ n }}">
+        <label class="month" for="expand{{ n }}">{{ <month_label d={post.date} locale={config.extra.date_locale} /> }}</label>
+        <div class="archives hidden">
+  {% endif %}
+{% include "partials/archive_post.html" %}
+{% endfor %}
+{% if posts %}</div></section>{% endif %}
+{% include "partials/pagination.html" %}

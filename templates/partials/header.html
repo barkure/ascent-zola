@@ -1,0 +1,19 @@
+<header id="header">
+  <h1 id="title">
+    <a href="{{ get_url(path='/') }}">{{ config.title }}</a>
+  </h1>
+  <nav>
+    {%- for item in config.extra.menu %}
+    {% if not loop.first %}<span class="nav-spacer">×</span>{% endif %}
+    {%- if item.url is starting_with(pat="http") %}
+      <a class="nav-link" target="_blank" rel="noopener" href="{{ item.url }}">{{ item.name }}</a>
+    {%- else %}
+      <a class="nav-link" href="{{ get_url(path=item.url) }}">{{ item.name }}</a>
+    {%- endif %}
+    {%- endfor %}
+    {%- if config.extra.rss %}
+    <span class="nav-spacer">×</span>
+    <a class="nav-link" href="{{ get_url(path=config.extra.rss) }}">RSS</a>
+    {%- endif %}
+  </nav>
+</header>

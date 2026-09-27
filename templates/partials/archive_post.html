@@ -1,0 +1,10 @@
+{#- One entry of the month-grouped archive listing. Context: `post`. -#}
+{% set layout = post.extra.layout | default(value="post") %}
+<article class="archive-article archive-type-{{ layout }}">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      {{ <post_date d={post.date} class_name="archive-article-date" day={true} locale={config.extra.date_locale} cjk={config.extra.cjk_meridiem} /> }}
+      {{ <post_title post={post} class_name="archive-article-title" index={true} show_words={config.extra.word_count} /> }}
+    </header>
+  </div>
+</article>

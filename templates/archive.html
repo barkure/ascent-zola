@@ -1,0 +1,9 @@
+{#- The month-grouped archive page: every post, grouped by month, with the
+    theme's "Toggle all" checkbox UI. Point a section at this template with
+    `template = "archive.html"` in its `_index.md`. -#}
+{% extends "base.html" %}
+{% block content %}
+{% set root = get_section(path="_index.md") %}
+{% set posts = root.pages %}
+{% include "partials/archive_grouped.html" %}
+{% endblock content %}

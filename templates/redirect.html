@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting…</title>
+  <link rel="canonical" href="{{ config.base_url }}/{{ page.extra.redirect_to | trim_start(pat='/') | safe }}">
+  <meta name="robots" content="noindex">
+  <meta http-equiv="refresh" content="0; url={{ page.extra.redirect_to }}">
+</head>
+<body>
+  <p><a href="{{ page.extra.redirect_to | safe }}">Redirecting…</a></p>
+</body>
+</html>

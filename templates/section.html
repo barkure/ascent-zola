@@ -1,0 +1,7 @@
+{#- A rendered section listing: same article list as the home page. -#}
+{% extends "base.html" %}
+{% block content %}
+{% if paginator is defined %}{% set posts = paginator.pages %}{% else %}{% set posts = section.pages %}{% endif %}
+{% include "partials/article_list.html" %}
+{% include "partials/pagination.html" %}
+{% endblock content %}

@@ -1,0 +1,22 @@
+{#- The list of terms of a taxonomy (e.g. /tags/): month-grouped listings were
+    used for single terms, this is the index of all of them. -#}
+{% extends "base.html" %}
+{% block content %}
+<section class="archives-wrap">
+  <label class="month">{{ taxonomy.name | capitalize }}</label>
+  <div class="archives">
+    {% for term in terms %}
+    <article class="archive-article">
+      <div class="archive-article-inner">
+        <header class="archive-article-header">
+          <span class="archive-article-date">{{ term.pages | length }}</span>
+          <h2 class="archive-article-title">
+            <a href="{{ term.permalink }}">{{ term.name }}</a>
+          </h2>
+        </header>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+{% endblock content %}

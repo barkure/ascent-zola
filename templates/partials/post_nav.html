@@ -1,0 +1,32 @@
+{#- Newer/older links, mirroring the original theme's `_partial/post/nav.ejs`.
+    Context: `post`.
+    The section sorts by date descending, and Zola's `lower` / `higher` follow
+    that order: `lower` is the newer post, `higher` the older one. -#}
+{% if post.lower or post.higher %}
+<nav id="article-nav" class="article-nav">
+  {% if post.lower %}
+    <a href="{{ post.lower.permalink }}" id="article-nav-newer" class="article-nav-link-wrap newer">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        {% if post.lower.title %}
+          {{ post.lower.title }}
+        {% endif %}
+      </div>
+    </a>
+  {% else %}
+    <span id="article-nav-newer" class="article-nav-link-wrap newer"></span>
+  {% endif %}
+  {% if post.higher %}
+    <a href="{{ post.higher.permalink }}" id="article-nav-older" class="article-nav-link-wrap older">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">
+        {% if post.higher.title %}
+          {{ post.higher.title }}
+        {% endif %}
+      </div>
+    </a>
+  {% else %}
+    <span id="article-nav-older" class="article-nav-link-wrap older"></span>
+  {% endif %}
+</nav>
+{% endif %}

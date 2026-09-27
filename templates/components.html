@@ -1,0 +1,93 @@
+{# ---------------------------------------------------------------------------
+   Ascent (Zola port) — Tera components shared by the templates.
+
+   Zola 0.23 ships Tera 2, where macros were replaced by components. Components
+   are hygienic: they only see the parameters they are given, so everything a
+   component needs (including `config.extra.*`) is passed in explicitly.
+
+   Call them with:  {{ <full_date d={post.date} locale="zh-cn" cjk={true} /> }}
+   --------------------------------------------------------------------------- #}
+
+{# moment.js zh-cn day periods: 凌晨 / 早上 / 上午 / 中午 / 下午 / 晚上 #}
+{% component meridiem(d) %}
+{%- set h = d | date(format="%H") | int -%}
+{%- if h < 6 %}凌晨{% elif h < 9 %}早上{% elif h < 11 %}上午{% elif h < 13 %}中午{% elif h < 18 %}下午{% else %}晚上{% endif -%}
+{% endcomponent meridiem %}
+
+{# The original theme's date format, `MMMM D, YYYY, h:mm A`.
+   With `cjk = true` the AM/PM marker becomes moment.js' Chinese day period,
+   e.g. "一月 20, 2026, 9:57 晚上". `locale` switches the date filter over to
+   UTS-35 (ICU) patterns; without it Zola expects strftime patterns. #}
+{% component full_date(d, locale, cjk) %}
+{%- set stamp = d | date(format="MMMM d, y, h:mm", locale=locale) -%}
+{{ stamp }}{% if cjk %} {{ <meridiem d={d} /> }}{% else %} {{ d | date(format="a", locale=locale) }}{% endif %}
+{%- endcomponent full_date %}
+
+{# The archive month heading, `MMMM YYYY`. #}
+{% component month_label(d, locale) %}{{ d | date(format="MMMM y", locale=locale) }}{% endcomponent month_label %}
+
+{# ISO-8601 value for a <time datetime="..."> attribute. #}
+{% component datetime_attr(d) %}{{ d | date(format="%Y-%m-%dT%H:%M:%S%z") }}{% endcomponent datetime_attr %}
+
+{# Replicates hexo-excerpt's `excerpt_excludes: [h1..h6, img, hr, pre]`: the
+   excluded elements never show up in a listing, so drop them from the rendered
+   summary. (`<!-- more -->` decides where the summary ends.) #}
+{% component excerpt(post) %}
+{%- if post.summary -%}
+{{ post.summary
+   | regex_replace(pattern="(?s)<pre.*?</pre>", rep="")
+   | regex_replace(pattern="(?s)<h[1-6][^>]*>.*?</h[1-6]>", rep="")
+   | regex_replace(pattern="<hr[^>]*>", rep="")
+   | regex_replace(pattern="<img[^>]*>", rep="")
+   | safe }}
+{%- endif -%}
+{% endcomponent excerpt %}
+
+{# Tag-stripped, whitespace-normalised text, used for meta descriptions. #}
+{% component plain(html) %}{{ html | regex_replace(pattern="<[^>]*>", rep=" ") | regex_replace(pattern="\\s+", rep=" ") | trim }}{% endcomponent plain %}
+
+{# Post title: a link on listings, plain text on the post itself. #}
+{% component post_title(post, class_name, index, show_words) %}
+{%- if index -%}
+    <h2 class="{{ class_name }}" itemprop="name">
+      <a href="{{ post.permalink }}">{{ post.title }}</a>
+      {%- if show_words %}<span class="archive-article-word-count">{{ post.word_count }} words</span>{% endif -%}
+    </h2>
+{%- else -%}
+    <h2 class="{{ class_name }}" itemprop="headline name">{{ post.title }}</h2>
+{%- endif -%}
+{% endcomponent post_title %}
+
+{# Post date: the full stamp, or just the day of the month in the archives. #}
+{% component post_date(d, class_name, day, locale, cjk) %}
+{%- if day -%}
+<time class="{{ class_name }}" datetime="{{ <datetime_attr d={d} /> }}" itemprop="datePublished">{{ d | date(format="%-d") }}</time>
+{%- else -%}
+<time class="{{ class_name }}" datetime="{{ <datetime_attr d={d} /> }}" itemprop="datePublished">{{ <full_date d={d} locale={locale} cjk={cjk} /> }}</time>
+{%- endif -%}
+{% endcomponent post_date %}
+
+{# --------------------------------------------------------------- open graph #}
+{% component open_graph(kind, title, url, section_title, description, image, d, author, og_locale) %}
+  <meta property="og:type" content="{{ kind }}">
+  <meta property="og:title" content="{{ title }}">
+  <meta property="og:url" content="{{ url | safe }}">
+  <meta property="og:site_name" content="{{ section_title }}">
+{%- if description %}
+  <meta property="og:description" content="{{ description }}">
+{%- endif %}
+  <meta property="og:locale" content="{{ og_locale }}">
+{%- if image %}
+  <meta property="og:image" content="{{ image | safe }}">
+{%- endif %}
+{%- if d %}
+  <meta property="article:published_time" content="{{ d | date(format="%Y-%m-%dT%H:%M:%S%z") }}">
+{%- endif %}
+{%- if kind == "article" %}
+  <meta property="article:author" content="{{ author }}">
+{%- endif %}
+  <meta name="twitter:card" content="summary">
+{%- if image %}
+  <meta name="twitter:image" content="{{ image | safe }}">
+{%- endif %}
+{%- endcomponent open_graph %}

@@ -1,0 +1,64 @@
+{#- Works out the page title the same way Hexo's `_partial/head.ejs` did:
+    the bare site title on the home page, "<title> | <site>" everywhere else. -#}
+{% set_global title = "" %}
+{% set_global og_kind = "website" %}
+{% set_global og_desc = "" %}
+{% set_global og_image = config.extra.og_image %}
+{% set_global og_date = "" %}
+{% set_global math = false %}
+{% if page is defined %}
+  {% set_global title = page.title %}
+  {% set_global og_kind = "article" %}
+  {% set_global og_date = page.date %}
+  {#- Zola serialises a missing summary as null, which `default` does not
+      catch and the plain() component cannot take. Build it by hand. -#}
+  {% set_global summary = "" %}
+  {% if page.summary %}{% set_global summary = page.summary %}{% endif %}
+  {% set_global og_desc = page.description | default(value=<plain html={summary} /> | trim) %}
+  {% set_global og_image = page.extra.og_image | default(value=config.extra.og_image) %}
+  {% if page.extra.mathjax | default(value=false) %}{% set_global math = true %}{% endif %}
+{% elif term is defined %}
+  {% set_global label = taxonomy.name | capitalize %}
+  {% if taxonomy.name == "tags" %}{% set_global label = "Tag" %}{% endif %}
+  {% if taxonomy.name == "categories" %}{% set_global label = "Category" %}{% endif %}
+  {% set_global title = label ~ ": " ~ term.name %}
+{% elif taxonomy is defined %}
+  {% set_global title = taxonomy.name | capitalize %}
+{% elif section is defined %}
+  {% set_global title = section.title | default(value="") %}
+  {% set_global og_desc = section.description | default(value="") %}
+{% endif %}
+{#- Hexo's MathJax filter also styled listings that contained math posts. -#}
+{% if not math %}
+{% if paginator is defined %}
+{% for p in paginator.pages %}{% if p.extra.mathjax | default(value=false) %}{% set_global math = true %}{% endif %}{% endfor %}
+{% endif %}
+{% endif %}
+<head>
+  <meta charset="utf-8">
+  <title>{% if title %}{{ title }} | {% endif %}{{ config.title }}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  {%- if config.extra.rss %}
+  <link rel="alternate" href="{{ get_url(path=config.extra.rss) }}" title="{{ config.title }}" type="application/atom+xml">
+  {%- endif %}
+  {%- if config.extra.favicon %}
+  <link rel="icon" href="{{ config.extra.favicon }}">
+  {%- endif %}
+  <link rel="stylesheet" href="{{ get_url(path='css/style.css') }}">
+  {%- if config.extra.highlight %}
+  <link rel="stylesheet" href="{{ get_url(path='css/highlight.css') }}">
+  {%- endif %}
+  {#- Syntax highlighting: Zola writes `/giallo.css` into the output root,
+      `css/syntax.css` maps its classes onto the Ascent palette. -#}
+  <link rel="stylesheet" href="/giallo.css">
+  <link rel="stylesheet" href="{{ get_url(path='css/syntax.css') }}">
+  {%- if og_desc %}
+  <meta name="description" content="{{ og_desc }}">
+  {%- endif %}
+  {% set_global og_title = config.title %}{% if title %}{% set_global og_title = title %}{% endif %}
+  {{ <open_graph kind={og_kind} title={og_title} url={current_url} section_title={config.title} description={og_desc} image={og_image} d={og_date} author={config.author} og_locale={config.extra.og_locale} /> }}
+  <meta name="generator" content="Zola {{ zola_version | default(value='') }}">
+  {%- if math %}
+  {% include "partials/mathjax.html" %}
+  {%- endif %}
+</head>

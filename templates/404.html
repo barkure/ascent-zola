@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="article article-type-page" itemprop="blogPost" itemscope>
+  <div class="article-inner">
+    <header class="article-header">
+      <h2 class="article-title" itemprop="headline name">Not found</h2>
+    </header>
+    <div class="article-entry" itemprop="articleBody">
+      <p>That page doesn't exist. Try the <a href="{{ get_url(path='/') }}">home page</a> or the <a href="{{ get_url(path='/archives') }}">archives</a>.</p>
+    </div>
+  </div>
+</article>
+{% endblock content %}

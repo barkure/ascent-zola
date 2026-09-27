@@ -1,0 +1,13 @@
+{#- The home page: a paginated list of posts, like Hexo's `index.ejs`.
+    Pagination is optional --- Hexo's `page.posts` existed either way, so an
+    unpaged section lists its pages directly. -#}
+{% extends "base.html" %}
+{% block content %}
+{% if paginator is defined %}
+  {% set posts = paginator.pages %}
+{% else %}
+  {% set posts = section.pages %}
+{% endif %}
+{% include "partials/article_list.html" %}
+{% include "partials/pagination.html" %}
+{% endblock content %}

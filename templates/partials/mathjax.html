@@ -1,0 +1,16 @@
+{#- Client-side MathJax loader.
+
+    Pages opt in with `mathjax = true` under `[extra]` in their front matter,
+    which reproduces the behaviour of `hexo-filter-mathjax`'s `mathjax: true`.
+
+    Replace this file with your own `templates/partials/mathjax.html` in the
+    site root to self-host the bundle, change the TeX options, or swap in
+    pre-rendered SVG output. -#}
+{% if config.extra.mathjax_config %}
+<script>
+MathJax = {{ config.extra.mathjax_config | safe }};
+</script>
+{% endif %}
+{% if config.extra.mathjax_url %}
+<script id="MathJax-script" async src="{{ config.extra.mathjax_url | safe }}"></script>
+{% endif %}

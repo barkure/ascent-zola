@@ -1,0 +1,8 @@
+{#- A single taxonomy term (e.g. /tags/pandoc/). The original Hexo theme sent
+    tag and category pages through the paginated archive partial, so this uses
+    the same month-grouped listing. -#}
+{% extends "base.html" %}
+{% block content %}
+{% set posts = term.pages %}
+{% include "partials/archive_grouped.html" %}
+{% endblock content %}

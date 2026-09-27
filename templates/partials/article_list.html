@@ -1,0 +1,6 @@
+{#- A list of posts, as shown on the home page and on taxonomy listings.
+    Context: `posts` (list of pages). -#}
+{% set index = true %}
+{% for post in posts %}
+{% include "partials/article.html" %}
+{% endfor %}

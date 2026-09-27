@@ -1,0 +1,9 @@
+{#- Pagination markup compatible with Hexo's `paginator()` helper, so the
+    original theme CSS keeps working unchanged.
+    Context: `paginator` (only present on paginated sections).
+    Page N > 1 lives at "<first>page/N/" (`paginate_path = "page"`). -#}
+{% if paginator is defined and paginator.number_pagers > 1 %}
+  <nav id="page-nav" class="page-nav">
+    {% if paginator.previous %}<a class="extend prev" rel="prev" href="{{ paginator.previous }}">« Prev</a>{% endif %}{% set_global gap = false %}{% for i in range(start=1, end=paginator.number_pagers + 1) %}{% if i == paginator.current_index %}<span class="page-number current">{{ i }}</span>{% set_global gap = false %}{% elif i == 1 %}<a class="page-number" href="{{ paginator.first }}">{{ i }}</a>{% set_global gap = false %}{% elif i == paginator.number_pagers %}<a class="page-number" href="{{ paginator.last }}">{{ i }}</a>{% set_global gap = false %}{% elif i >= paginator.current_index - 2 and i <= paginator.current_index + 2 %}<a class="page-number" href="{{ paginator.first }}page/{{ i }}/">{{ i }}</a>{% set_global gap = false %}{% elif not gap %}<span class="space">…</span>{% set_global gap = true %}{% endif %}{% endfor %}{% if paginator.next %}<a class="extend next" rel="next" href="{{ paginator.next }}">Next »</a>{% endif %}
+  </nav>
+{% endif %}
