@@ -20,9 +20,6 @@ menu = [
   { name = "Archives", url = "/archives" },
 ]
 
-# 显示右下角的深色模式按钮。
-settings = true
-
 # 加载代码块样式和高亮配色。
 highlight = true
 

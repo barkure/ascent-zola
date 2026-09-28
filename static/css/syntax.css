@@ -61,7 +61,7 @@ pre.giallo > code {
 }
 
 /* -- base colours: giallo.css sets a white background, the Ascent theme uses
-      --code-bg-color (and follows the dark-mode toggle) --------------------- */
+      --code-bg-color (and follows the system color scheme) --------------------- */
 .z-code {
   color: var(--text-color);
   background-color: var(--code-bg-color);

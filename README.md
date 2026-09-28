@@ -3,7 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-informational.svg)](LICENSE)
 [![Zola: ≥ 0.23](https://img.shields.io/badge/Zola-%E2%89%A5%200.23-blue.svg)](https://www.getzola.org)
 
-适合长文博客的 Zola 主题，使用思源宋体，支持深色模式、按月归档和代码高亮。
+适合长文博客的 Zola 主题，使用思源宋体，自动跟随系统切换深浅色，支持按月归档和代码高亮。
 
 **[在线预览](https://blog.barku.re/)**
 
@@ -111,7 +111,6 @@ menu = [
   { name = "归档", url = "/archives" },
 ]
 word_count = false       # 显示字数和阅读时间
-settings = true          # 显示深色模式按钮
 ```
 
 需要 RSS 订阅时，在 `zola.toml` 顶层（所有 `[表名]` 之前）添加：
