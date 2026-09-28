@@ -46,19 +46,24 @@ rss = ""
 word_count = false
 
 # ---------------------------------------------------------------------- fonts
-# Stylesheet holding the @font-face rules. The default is the original Hexo
-# theme's four families, as one request instead of the original's two @imports.
-# Shipped as a site option partly so it can be re-pointed at
-# https://fonts.googleapis.cn for readers in mainland China: that mirror serves
-# the same CSS but references the font files on fonts.gstatic.cn, so
-# `fonts_preconnect` has to change with it. Set to "" to load no webfonts at
-# all, and the stacks below fall through to their local families.
+# Stylesheet(s) holding the @font-face rules: a single URL, or a list of URLs.
+# The default is the original Hexo theme's four families, as one request instead
+# of the original's two @imports. A leading "/" is resolved with get_url, so
+# self-hosted stylesheets can be named as "css/whatever.css".
+#
+# Shipped as a site option partly so it can be re-pointed at a mirror, e.g. for
+# readers in mainland China: https://fonts.googleapis.cn serves the same CSS but
+# references the font files on fonts.gstatic.cn, so `fonts_preconnect` has to
+# change with it. A family no webfont host carries (Maple Mono CN, for instance)
+# can be added as a second entry pointing at a CDN or a self-hosted stylesheet.
+# Set to "" to load no webfonts at all, and the stacks below fall through to
+# their local families.
 fonts_url = "https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display+SC:wght@400;900&family=Roboto+Mono&display=swap"
 
 # Origins to <link rel="preconnect"> before the stylesheets, so the font CSS and
 # the font files are discovered alongside the rest of the document. Add the
 # font-file host as well whenever it differs from the stylesheet host (Google
-# Fonts serves the two from different domains).
+# Fonts serves the two from different domains; npm CDNs serve both from one).
 fonts_preconnect = ["https://fonts.googleapis.com", "https://fonts.gstatic.com"]
 
 # The font stacks, written as raw CSS values: quote any family name containing a

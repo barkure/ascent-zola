@@ -64,7 +64,22 @@
   <link rel="stylesheet" href="/giallo.css">
   <link rel="stylesheet" href="{{ get_url(path='css/syntax.css') }}">
   {%- if config.extra.fonts_url %}
+  {#- One stylesheet URL, or a list of them. Entries are used verbatim, except
+      that a leading "/" is resolved with get_url so a self-hosted stylesheet
+      follows base_url. Several families often means several stylesheets: a
+      webfont host for the text face and a self-hosted or mirror-hosted file
+      for, say, a code face that no webfont host carries. -#}
+  {%- if config.extra.fonts_url is string %}
   <link rel="stylesheet" href="{{ config.extra.fonts_url }}">
+  {%- else %}
+  {%- for sheet in config.extra.fonts_url %}
+  {%- if sheet is starting_with(pat="/") %}
+  <link rel="stylesheet" href="{{ get_url(path=sheet) }}">
+  {%- else %}
+  <link rel="stylesheet" href="{{ sheet }}">
+  {%- endif %}
+  {%- endfor %}
+  {%- endif %}
   {%- endif %}
   {%- if config.extra.body_stack or config.extra.title_stack or config.extra.secondary_stack or config.extra.highlight_stack %}
   {#- The stacks as raw CSS values, last in the cascade so they beat the :root

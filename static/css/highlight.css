@@ -24,10 +24,18 @@ code {
 
 pre {
   background-color: var(--code-bg-color);
+  border: 1px solid var(--tertiary-color);
+  border-radius: 3px;
   box-sizing: border-box;
   font-size: 0.8em;
   font-family: var(--highlight-stack);
-  margin: 0;
+  /* The margin lives here rather than on a wrapper. Under Giallo, Zola emits
+     <pre class="giallo z-code"> directly; the original Hexo markup wrapped it
+     in <figure class="highlight">, which is what `.highlight { margin: 1em 0 }`
+     below used to space out. With no wrapper, and with `p` carrying only a
+     bottom margin, a block used to sit flush against the paragraph after it.
+     1.25em resolves to the body's 1rem paragraph rhythm at every size. */
+  margin: 1.25em 0;
   overflow-x: auto;
   padding: 0.5em;
 }
@@ -49,6 +57,12 @@ pre::-webkit-scrollbar-thumb {
   margin: 1em 0;
   width: 100%;
 }
+
+/* The rules from here down are scoped to `.highlight`, the wrapper the Hexo
+   theme put around every block. Giallo does not emit it, so they are inert on
+   a Zola site; the parts that still matter (the line-number gutter, the code
+   cell width) are reimplemented against Giallo's markup in css/syntax.css.
+   Kept for parity with the original stylesheet. */
 
 .highlight .gutter pre {
   background-color: var(--bg-color);

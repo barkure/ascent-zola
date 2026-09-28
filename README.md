@@ -137,7 +137,7 @@ from the theme's `theme.toml`):
 | `google_analytics_acct` | `""` | Universal Analytics id; enables the snippet when set |
 | `mathjax_url` | jsDelivr `mathjax@4/tex-svg.js` | MathJax bundle for `mathjax = true` pages |
 | `mathjax_config` | TeX delimiters, `enableMenu: false` | inline `MathJax = {...}` object |
-| `fonts_url` | Google Fonts Lora / Lato / Playfair Display SC / Roboto Mono | `@font-face` stylesheet; `""` loads no webfonts |
+| `fonts_url` | Google Fonts Lora / Lato / Playfair Display SC / Roboto Mono | `@font-face` stylesheet, or a list of them; `""` loads no webfonts |
 | `fonts_preconnect` | googleapis + gstatic | origins to preconnect before the stylesheets |
 | `body_stack` | `"Lora", … serif` | body text |
 | `title_stack` | `"Playfair Display SC", … serif` | site name and post titles |
@@ -153,7 +153,9 @@ Page-level, in a post's front matter under `[extra]`: `mathjax`, `og_image`,
 Nothing is hardcoded: the theme links `fonts_url` from `partials/head.html`
 (no `@import`, which would serialise the font fetch behind the stylesheet) and
 emits the four stacks as an inline `<style>` that overrides the `:root`
-defaults. Change the families without touching CSS, e.g. a serif-only site:
+defaults. `fonts_url` takes one stylesheet URL or a list of them; a leading `/`
+is resolved with `get_url`. Change the families without touching CSS, e.g. a
+serif-only site:
 
 ```toml
 [extra]
@@ -179,6 +181,29 @@ One caveat with CJK families: Google Fonts splits them into ~100
 `unicode-range` subsets, so a Chinese page pulls only the slices its glyphs land
 in — several dozen small requests instead of one file. That is fine for a blog,
 but self-hosting a subset is better if you care about first paint.
+
+A family no webfont host carries goes in as a second entry. Maple Mono CN, for
+instance, is packaged on npm as `unicode-range` slices, so the browser fetches
+only the slices a page's glyphs fall in:
+
+```toml
+[extra]
+fonts_url = [
+  "https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@200..900&display=swap",
+  # cdn.jsdelivr.net has low availability in mainland China; these mirrors
+  # carry the same package and gzip the CSS just the same.
+  "https://jsd.onmicrosoft.cn/npm/@automann/maple-mono-cn@7.9.2/dist/regular.css",
+]
+fonts_preconnect = [
+  "https://fonts.googleapis.com", "https://fonts.gstatic.com",
+  "https://jsd.onmicrosoft.cn",
+]
+highlight_stack = '"Maple Mono CN", "Inconsolata", "Consolas", ui-monospace, monospace'
+```
+
+Note that sliced CJK packaging is not automatically lighter than one bespoke
+subset: each slice carries glyphs for a whole range, so a page that touches many
+ranges pays for all of them. Measure before assuming.
 
 ### Overriding templates
 
