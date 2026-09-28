@@ -1,5 +1,3 @@
-@import url('//fonts.googleapis.com/css2?family=Roboto+Mono&display=swap');
-
 /* highlight */
 :root {
   --highlight-comment-color: #8e908c;
@@ -10,6 +8,8 @@
   --highlight-aqua-color: #40b7bf;
   --highlight-blue-color: #528fe0;
   --highlight-purple-color: #ab5fdd;
+  /* Default from the original theme; a site's [extra].highlight_stack
+     (theme.toml) overrides it through the inline <style> in head.html. */
   --highlight-stack: "Roboto Mono", "Inconsolata", "Consolas", monospace;
 }
 

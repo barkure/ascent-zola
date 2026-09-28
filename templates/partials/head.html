@@ -44,6 +44,17 @@
   {%- if config.extra.favicon %}
   <link rel="icon" href="{{ config.extra.favicon }}">
   {%- endif %}
+  {#- Webfonts. The stylesheet URL and the stacks are site options (defaults in
+      theme.toml). Preconnecting here, before the stylesheets, lets the font CSS
+      and the font files be discovered as early as the rest of the document. For
+      readers in mainland China point `fonts_url` at
+      https://fonts.googleapis.cn and add https://fonts.gstatic.cn to
+      `fonts_preconnect`. -#}
+  {%- if config.extra.fonts_url %}
+  {%- for origin in config.extra.fonts_preconnect | default(value=[]) %}
+  <link rel="preconnect" href="{{ origin }}" crossorigin>
+  {%- endfor %}
+  {%- endif %}
   <link rel="stylesheet" href="{{ get_url(path='css/style.css') }}">
   {%- if config.extra.highlight %}
   <link rel="stylesheet" href="{{ get_url(path='css/highlight.css') }}">
@@ -52,6 +63,31 @@
       `css/syntax.css` maps its classes onto the Ascent palette. -#}
   <link rel="stylesheet" href="/giallo.css">
   <link rel="stylesheet" href="{{ get_url(path='css/syntax.css') }}">
+  {%- if config.extra.fonts_url %}
+  <link rel="stylesheet" href="{{ config.extra.fonts_url }}">
+  {%- endif %}
+  {%- if config.extra.body_stack or config.extra.title_stack or config.extra.secondary_stack or config.extra.highlight_stack %}
+  {#- The stacks as raw CSS values, last in the cascade so they beat the :root
+      defaults in css/style.css and css/highlight.css. `safe` is load-bearing:
+      <style> is a raw-text element, so HTML-escaping the quotes would turn
+      every declaration into garbage. -#}
+  <style>
+    :root {
+      {%- if config.extra.body_stack %}
+      --body-stack: {{ config.extra.body_stack | safe }};
+      {%- endif %}
+      {%- if config.extra.title_stack %}
+      --title-stack: {{ config.extra.title_stack | safe }};
+      {%- endif %}
+      {%- if config.extra.secondary_stack %}
+      --secondary-stack: {{ config.extra.secondary_stack | safe }};
+      {%- endif %}
+      {%- if config.extra.highlight_stack %}
+      --highlight-stack: {{ config.extra.highlight_stack | safe }};
+      {%- endif %}
+    }
+  </style>
+  {%- endif %}
   {%- if og_desc %}
   <meta name="description" content="{{ og_desc }}">
   {%- endif %}

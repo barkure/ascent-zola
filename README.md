@@ -17,9 +17,9 @@ stylesheets and behaviour, ported 1:1 from the Hexo original.
 
 ## Features
 
-* Magazine-style typography: Lora / Lato / Playfair Display SC stacks, a
-  serif ⇄ sans toggle, and a light ⇄ dark toggle that remembers its choice
-  in `localStorage`.
+* Magazine-style typography: configurable font stacks (Lora / Lato / Playfair
+  Display SC by default), an optional serif ⇄ sans toggle, and a light ⇄ dark
+  toggle that remembers its choice in `localStorage`.
 * Month-grouped archives with per-month accordions and a "Toggle all" switch.
 * Excerpts on listings, with headings, images, rules and code blocks
   automatically kept out of the summary.
@@ -123,7 +123,8 @@ from the theme's `theme.toml`):
 | --- | --- | --- |
 | `favicon` | `""` | path to your favicon (the theme ships none), e.g. `/favicon.ico` |
 | `menu` | Home, Archives | header links; `http(s)://` URLs automatically get `target="_blank" rel="noopener"` |
-| `settings` | `true` | show the `dark` / `sans` toggles |
+| `settings` | `true` | show the lower-right toggles |
+| `sans_toggle` | `true` | include the serif ⇄ sans toggle (swaps `body_stack` ⇄ `sans_stack`) |
 | `highlight` | `true` | load `css/highlight.css` |
 | `excerpt_link` | `read more` | label of the read-more link, `""` to hide |
 | `rss` | `""` | feed path for the header link, e.g. `/atom.xml` |
@@ -136,9 +137,48 @@ from the theme's `theme.toml`):
 | `google_analytics_acct` | `""` | Universal Analytics id; enables the snippet when set |
 | `mathjax_url` | jsDelivr `mathjax@4/tex-svg.js` | MathJax bundle for `mathjax = true` pages |
 | `mathjax_config` | TeX delimiters, `enableMenu: false` | inline `MathJax = {...}` object |
+| `fonts_url` | Google Fonts Lora / Lato / Playfair Display SC / Roboto Mono | `@font-face` stylesheet; `""` loads no webfonts |
+| `fonts_preconnect` | googleapis + gstatic | origins to preconnect before the stylesheets |
+| `body_stack` | `"Lora", … serif` | body text |
+| `title_stack` | `"Playfair Display SC", … serif` | site name and post titles |
+| `secondary_stack` | `"Lato", … sans-serif` | nav, dates, metadata |
+| `highlight_stack` | `"Roboto Mono", … monospace` | code and `pre` |
+| `sans_stack` | `"Lato", … sans-serif` | what the serif ⇄ sans toggle switches to |
 
 Page-level, in a post's front matter under `[extra]`: `mathjax`, `og_image`,
 `photos`, `layout`.
+
+### Fonts
+
+Nothing is hardcoded: the theme links `fonts_url` from `partials/head.html`
+(no `@import`, which would serialise the font fetch behind the stylesheet) and
+emits the four stacks as an inline `<style>` that overrides the `:root`
+defaults. Change the families without touching CSS, e.g. a serif-only site:
+
+```toml
+[extra]
+body_stack = '"Noto Serif SC", "Songti SC", "SimSun", serif'
+title_stack = '"Noto Serif SC", "Songti SC", "SimSun", serif'
+secondary_stack = '"Noto Serif SC", "Songti SC", "SimSun", serif'
+sans_toggle = false
+```
+
+Values are raw CSS, so quote family names containing spaces and keep the generic
+family last.
+
+Google Fonts is unreachable from mainland China. Swap the host for the `.cn`
+mirror and preconnect to the matching font-file host:
+
+```toml
+[extra]
+fonts_url = "https://fonts.googleapis.cn/css2?family=Noto+Serif+SC:wght@200..900&display=swap"
+fonts_preconnect = ["https://fonts.googleapis.cn", "https://fonts.gstatic.cn"]
+```
+
+One caveat with CJK families: Google Fonts splits them into ~100
+`unicode-range` subsets, so a Chinese page pulls only the slices its glyphs land
+in — several dozen small requests instead of one file. That is fine for a blog,
+but self-hosting a subset is better if you care about first paint.
 
 ### Overriding templates
 

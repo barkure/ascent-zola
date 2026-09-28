@@ -23,8 +23,14 @@ menu = [
   { name = "Archives", url = "/archives" },
 ]
 
-# Show the "dark" / "sans" toggles in the lower-right corner.
+# Show the lower-right toggles: the dark-mode one, plus the serif ⇄ sans one
+# below when `sans_toggle` is on.
 settings = true
+
+# Show the serif ⇄ sans toggle next to the dark-mode toggle. It swaps
+# --body-stack between `body_stack` and `sans_stack` (see the fonts section),
+# so turn it off for a site that only ships one of the two.
+sans_toggle = true
 
 # Load css/highlight.css (highlight.js palette shipped with the original theme).
 highlight = true
@@ -38,6 +44,37 @@ rss = ""
 
 # Show "N words × M minutes" next to the date.
 word_count = false
+
+# ---------------------------------------------------------------------- fonts
+# Stylesheet holding the @font-face rules. The default is the original Hexo
+# theme's four families, as one request instead of the original's two @imports.
+# Shipped as a site option partly so it can be re-pointed at
+# https://fonts.googleapis.cn for readers in mainland China: that mirror serves
+# the same CSS but references the font files on fonts.gstatic.cn, so
+# `fonts_preconnect` has to change with it. Set to "" to load no webfonts at
+# all, and the stacks below fall through to their local families.
+fonts_url = "https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display+SC:wght@400;900&family=Roboto+Mono&display=swap"
+
+# Origins to <link rel="preconnect"> before the stylesheets, so the font CSS and
+# the font files are discovered alongside the rest of the document. Add the
+# font-file host as well whenever it differs from the stylesheet host (Google
+# Fonts serves the two from different domains).
+fonts_preconnect = ["https://fonts.googleapis.com", "https://fonts.gstatic.com"]
+
+# The font stacks, written as raw CSS values: quote any family name containing a
+# space, and keep the generic family last. They are injected as an inline
+# <style> that overrides the :root defaults in css/style.css and
+# css/highlight.css. `body_stack` is the body text, `title_stack` the site name
+# and post titles, `secondary_stack` the sans-ish chrome (nav, dates, metadata),
+# `highlight_stack` code and preformatted text.
+body_stack = '"Lora", "Georgia", "Times New Roman", serif'
+title_stack = '"Playfair Display SC", "Georgia", serif'
+secondary_stack = '"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif'
+highlight_stack = '"Roboto Mono", "Inconsolata", "Consolas", monospace'
+
+# What the serif ⇄ sans toggle switches --body-stack to; only read when
+# `sans_toggle` is on.
+sans_stack = '"Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif'
 
 # ------------------------------------------------------------------- metadata
 # Locale handed to Zola's `date` filter (BCP-47), e.g. "en", "zh-cn" (which

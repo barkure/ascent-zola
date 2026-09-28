@@ -1,5 +1,3 @@
-@import url('//fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display+SC:wght@400;900&display=swap');
- 
 /* general */
 :root {
   --bg-color: #fafafa;
@@ -11,6 +9,13 @@
   --link-hover-color: #618794;
   --link-bg-color: #dae4e7;
   --selection-color: #dae4e7;
+  /* The original Hexo theme's stacks, kept verbatim as the fallback defaults.
+     A site's [extra].body_stack / .title_stack / .secondary_stack (see
+     theme.toml) are emitted as an inline <style> from partials/head.html,
+     which sits later in the cascade and therefore wins over these. The
+     webfonts themselves are loaded by partials/head.html too, not with an
+     @import here -- an @import would serialise the font fetch behind this
+     stylesheet. */
   --body-stack: "Lora", "Georgia", "Times New Roman", serif;
   --secondary-stack: "Lato", "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "Verdana", sans-serif;
   --title-stack: "Playfair Display SC", "Georgia", serif;
@@ -423,7 +428,7 @@ td, th, table caption, table td, table th {
   right: 0;
 }
 
-#sans-font, #dark-mode {
+#dark-mode {
   cursor: pointer;
   float: right;
   padding: 0.5em;
