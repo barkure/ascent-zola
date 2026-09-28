@@ -38,19 +38,17 @@ pre {
   margin: 1.25em 0;
   overflow-x: auto;
   padding: 0.5em;
-}
-
-pre::-webkit-scrollbar-track {
-  background-color: var(--code-bg-color);
-}
-
-pre::-webkit-scrollbar {
-  height: 0.5em;
-  background-color: var(--code-bg-color);
-}
-
-pre::-webkit-scrollbar-thumb {
-  background-color: var(--tertiary-color);
+  /* A thin bar whose track stays transparent, so the block's own background and
+     its rounded bottom corners show through. Only the standard properties are
+     used, deliberately: the original theme styled ::-webkit-scrollbar instead
+     (painting track and bar --code-bg-color to hide the default track), which
+     forces a classic scrollbar on macOS where the platform would draw an
+     overlay one -- a permanent grey band under every block, even the ones that
+     were not wide enough to need it. Chrome ignores ::-webkit-scrollbar rules
+     anyway as soon as these two are set, so mixing the two is worse than
+     useless. */
+  scrollbar-color: var(--tertiary-color) transparent;
+  scrollbar-width: thin;
 }
 
 .highlight {

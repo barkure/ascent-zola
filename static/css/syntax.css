@@ -46,17 +46,18 @@
   top: -0.2em;
 }
 
-/* the code cell was narrower than the prose column in the original theme */
+/* The code cell. The original theme sized it to the prose column and bled the
+   gutter further left, which stops working the moment the block gets a padding
+   and a border of its own: the cell then wanted 30em inside a 30em minus
+   padding-and-border box, so every block overflowed by ~19px and WebKit drew a
+   scrollbar for content that was not actually too wide. `max-content` sizes the
+   cell to its longest line instead, and `min-width: 100%` keeps short blocks
+   filling the box, so the scrollbar only appears for genuinely long lines. */
 pre.giallo > code {
-  display: inline-block;
+  display: block;
   box-sizing: border-box;
-  max-width: 30rem;
-  width: calc(100vw - 4rem);
-}
-@media all and (min-width: 620px) {
-  pre.giallo > code {
-    max-width: 37.5em;
-  }
+  min-width: 100%;
+  width: max-content;
 }
 
 /* -- base colours: giallo.css sets a white background, the Ascent theme uses
