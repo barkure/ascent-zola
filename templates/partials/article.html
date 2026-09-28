@@ -61,22 +61,8 @@
     </div>
     {% endif %}
     {% endif %}
-    {% if index and config.extra.intensedebate_acct %}
-      <footer class="article-footer">
-        <a href="{{ post.permalink }}#idc-container">Comments</a>
-      </footer>
-    {% endif %}
   </div>
 </article>
 {% if not index %}
 {% include "partials/post_nav.html" %}
-{% endif %}
-{% if not index and config.extra.intensedebate_acct %}
-  <script>
-  var idcomments_acct = '{{ config.extra.intensedebate_acct }}';
-  var idcomments_post_id;
-  var idcomments_post_url;
-  </script>
-  <span id="IDCommentsPostTitle" style="display:none"></span>
-  <script type='text/javascript' src='https://www.intensedebate.com/js/genericCommentWrapperV2.js'></script>
 {% endif %}

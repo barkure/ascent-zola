@@ -11,9 +11,9 @@
       <a class="nav-link" href="{{ get_url(path=item.url) }}">{{ item.name }}</a>
     {%- endif %}
     {%- endfor %}
-    {%- if config.extra.rss %}
+    {%- if config.generate_feeds and config.feed_filenames %}
     <span class="nav-spacer">×</span>
-    <a class="nav-link" href="{{ get_url(path=config.extra.rss) }}">RSS</a>
+    <a class="nav-link" href="{{ get_url(path=config.feed_filenames[0]) }}">RSS</a>
     {%- endif %}
   </nav>
 </header>
