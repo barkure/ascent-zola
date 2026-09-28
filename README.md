@@ -7,7 +7,7 @@
 
 **[在线预览](https://blog.barku.re/)**
 
-<img src="screenshot.jpg" alt="主题截图" width="720">
+<img src="screenshot.jpg" alt="主题截图" width="500">
 
 ## 安装
 
