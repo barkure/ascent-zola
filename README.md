@@ -93,6 +93,11 @@ og_image = "/images/cover.jpg"   # 分享预览图
 photos = ["/images/photo.jpg"]   # 文章图片
 ```
 
+`og_image` 写站内相对路径即可（图片放 `static/images/`），模板会用 `base_url`
+自动补成绝对地址——`og:image` / `twitter:image` 必须是绝对 URL，否则社交平台
+抓不到预览图。换域名时只改 `zola.toml` 的 `base_url`，文章里的路径不用动。
+本来就是 `http(s)://` 开头的外链会被原样保留。
+
 如需标签或分类页面，在 `zola.toml` 中添加：
 
 ```toml
